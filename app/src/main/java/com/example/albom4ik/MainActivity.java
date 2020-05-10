@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -51,10 +52,6 @@ public class MainActivity extends Activity {
             return 0;
         }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            return null;
-        }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
@@ -144,22 +141,23 @@ public class MainActivity extends Activity {
         for (File file : files) {
             myImageAdapter.add(file.getAbsolutePath());
         }
+        gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+
+                ImageView img = (ImageView) myImageAdapter.getView(position, v, parent);
+                img.buildDrawingCache();
+                Bitmap bmap = img.getDrawingCache();
+                Intent intent = new Intent(MainActivity.this,
+                        ImageViewer.class);
+                Bundle bundle = new Bundle();
+//                String par = myImageAdapter.(position);
+//                bundle.putString("imagepath", par);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, 0);
+
+            }
+        });
     }
+}
 
-gridview.setOnItemClickListener(new OnItemClickListener() {
-        public void onItemClick(AdapterView<?> parent, View v,
-        int position, long id) {
-
-            ImageView img = myImageAdapter.getView(position, v, parent);
-            img.buildDrawingCache();
-            Bitmap bmap = img.getDrawingCache();
-            Intent intent = new Intent(MainActivity.this,
-                    Imageviewer.class);
-            Bundle bundle = new Bundle();
-            String par=myimageadpter.getpath(position);
-            bundle.putString("imagepath", par);
-            intent.putExtras(bundle);
-            startActivityForResult(intent, 0);
-
-        }
-    });
